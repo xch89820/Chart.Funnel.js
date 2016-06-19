@@ -12,3 +12,5 @@ bower_components/
 coverage/*
 .idea
 nbproject/*
+
+npm-debug.log

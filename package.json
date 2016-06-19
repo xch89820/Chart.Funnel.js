@@ -3,8 +3,32 @@
   "version": "0.1.0",
   "description": "The funnel plugin for Chart.js",
   "main": "src/chart.funnel.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "chart.js": ">2.1.0"
+  },
+  "devDependencies": {
+    "bundle-collapser": "^1.2.1",
+    "browserify": "^13.0.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-insert": "^0.5.0",
+    "gulp-jshint": "^2.0.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-streamify": "^1.0.2",
+    "jshint": "^2.9.2",
+    "gulp-uglify": "^1.5.3",
+    "jshint-stylish": "^2.2.0",
+    "merge-stream": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
   "scripts": {
-    "test": "gulp test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -12,6 +36,7 @@
   },
   "keywords": [
     "Chart.js",
+    "Chartjs",
     "funnel",
     "plugin"
   ],
@@ -20,25 +45,5 @@
   "bugs": {
     "url": "https://github.com/xch89820/Chart.Funnel.js/issues"
   },
-  "homepage": "https://github.com/xch89820/Chart.Funnel.js",
-  "devDependencies": {
-    "browserify": "^13.0.1",
-    "bundle-collapser": "^1.2.1",
-    "gulp": "*",
-    "gulp-browserify": "*",
-    "gulp-concat": "*",
-    "gulp-insert": "^0.5.0",
-    "gulp-jshint": "*",
-    "gulp-plumber": "*",
-    "gulp-rename": "*",
-    "gulp-replace": "^0.5.4",
-    "gulp-streamify": "^1.0.2",
-    "gulp-uglify": "*",
-    "jshint-stylish": "^2.2.0",
-    "merge-stream": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "dependencies": {
-    "chart.js": ">2.1.0"
-  }
+  "homepage": "https://github.com/xch89820/Chart.Funnel.js"
 }
