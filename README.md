@@ -1,3 +1,5 @@
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url]
+
 # Chart.Funnel.js
 The funnel plugin for Chart.js
 
@@ -49,3 +51,10 @@ Please see `example` folder for more information
 ## License
 
 Chart.Funnel.js is available under the [MIT license](http://opensource.org/licenses/MIT).
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: http://opensource.org/licenses/MIT
+
+[npm-url]: https://www.npmjs.com/package/chartjs-funnel
+[npm-version-image]: http://img.shields.io/npm/v/backbone-observe.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/backbone-observe.svg?style=flat
