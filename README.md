@@ -56,5 +56,5 @@ Chart.Funnel.js is available under the [MIT license](http://opensource.org/licen
 [license-url]: http://opensource.org/licenses/MIT
 
 [npm-url]: https://www.npmjs.com/package/chartjs-funnel
-[npm-version-image]: http://img.shields.io/npm/v/backbone-observe.svg?style=flat
-[npm-downloads-image]: http://img.shields.io/npm/dm/backbone-observe.svg?style=flat
+[npm-version-image]: http://img.shields.io/npm/v/chartjs-funnel.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/chartjs-funnel.svg?style=flat
