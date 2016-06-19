@@ -1,5 +1,5 @@
 {
-  "name": "Chart.Funnel.js",
+  "name": "chartjs-funnel",
   "version": "0.1.0",
   "description": "The funnel plugin for Chart.js",
   "main": "src/chart.funnel.js",

@@ -8,7 +8,7 @@ To download a zip, go to the Chart.Funnel.js on Github
 To install via npm / bower:
 
 ```bash
-npm install Chart.Funnel.js --save
+npm install chartjs-funnel --save
 ```
 
 ## Usage
