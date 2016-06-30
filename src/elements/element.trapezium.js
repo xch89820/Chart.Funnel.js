@@ -17,7 +17,7 @@ module.exports = function(Chart) {
 		borderWidth: 0,
 		borderColor: globalOpts.defaultColor,
 		borderSkipped: 'bottom',
-		type: 'isosceles'  // isosceles
+		type: 'isosceles'  // isosceles, scalene
 	};
 
 	// Thanks for https://github.com/substack/point-in-polygon
@@ -42,13 +42,15 @@ module.exports = function(Chart) {
 	Chart.elements.Trapezium = Chart.Element.extend({
 		getCorners: function () {
 			var vm = this._view;
+			var globalOptionTrapeziumElements = globalOpts.elements.trapezium;
 
 			var corners = [],
-				type = vm.type || globalOpts.elements.trapezium.type,
+				type = vm.type || globalOptionTrapeziumElements.type,
 				top = vm.y,
+				borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
 				upHalfWidth = vm.upperWidth / 2,
 				botHalfWidth = vm.bottomWidth / 2,
-				halfStroke = vm.borderWidth / 2;
+				halfStroke = borderWidth / 2;
 
 			halfStroke = halfStroke < 0 ? 0 : halfStroke;
 
@@ -76,6 +78,7 @@ module.exports = function(Chart) {
 					[x2 + botHalfWidth - halfStroke, vm.base]
 				];
 			}
+
 
 			return corners;
 		},
@@ -116,24 +119,38 @@ module.exports = function(Chart) {
 		},
 		height: function () {
 			var vm = this._view;
+			if (!vm) {
+				return 0;
+			}
+
 			return vm.base - vm.y;
 		},
 		inRange: function (mouseX, mouseY) {
 			var vm = this._view;
-
+			if (!vm) {
+				return false;
+			}
 			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
-
 			return pointInPolygon([mouseX, mouseY], corners);
 		},
 		inLabelRange: function (mouseX) {
 			var x,
-				vm = this._view,
-				maxWidth = Math.max(this.upperWidth, this.bottomWidth);
+				vm = this._view;
+
+			if (!vm) {
+				return false;
+			}
 
 			if (vm.type == 'scalene') {
-				x = this.upperWidth === maxWidth ? vm.x1 : vm.x2;
+				if (vm.x1 > vm.x2) {
+					return mouseX >= vm.x2 - vm.bottomWidth / 2 && mouseX <= vm.x1 + vm.upperWidth / 2;
+				} else {
+					return mouseX <= vm.x2 + vm.bottomWidth / 2 && mouseX >= vm.x1 - vm.upperWidth / 2;
+				}
 			}
-			return vm ? (mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2) : false;
+
+			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
+			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
 
 		},
 		tooltipPosition: function () {

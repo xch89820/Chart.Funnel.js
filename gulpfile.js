@@ -11,6 +11,7 @@ var concat = require('gulp-concat');
 var source = require('vinyl-source-stream');
 var merge = require('merge-stream');
 var collapse = require('bundle-collapser/plugin');
+var Server = require('karma').Server;
 
 var package = require('./package.json');
 var header = "/*!\n" +
@@ -65,6 +66,16 @@ gulp.task('jshint',function(){
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
 });
+
+// For CI
+gulp.task('unittest.ci',function(done){
+    new Server({
+        configFile: __dirname + '/karma.conf.ci.js',
+        singleRun: true
+    }, done).start();
+});
+
+gulp.task('test.ci', ['jshint', 'unittest.ci']);
 
 gulp.task('default',function(){
     gulp.watch('src/**/*.js',['js']);
