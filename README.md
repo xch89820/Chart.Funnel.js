@@ -20,6 +20,8 @@ npm install chartjs-funnel --save
 
 You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
 
+![alt tag](https://cloud.githubusercontent.com/assets/4920540/16495890/e6c3aaee-3f21-11e6-868a-40c796613d3c.jpg)
+
 To configure the funnel plugin, you can simply set chart type to `funnel`.
 
 Simple example:
