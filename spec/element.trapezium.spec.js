@@ -2,6 +2,7 @@
 
 /** globals Chart **/
 var Chart = require('chart.js');
+var MockContext = require('./MockCanvasContext.js');
 require('../src/elements/element.trapezium.js')(Chart);
 
 describe('Trapezium element tests', function() {
@@ -150,4 +151,183 @@ describe('Trapezium element tests', function() {
         expect(trapezium.inLabelRange(5)).toBe(true);
         expect(trapezium.inLabelRange(6)).toBe(false);
     });
+
+    it ('Scalene trapezium, should get the correct height', function() {
+        var trapezium = new Chart.elements.Trapezium({
+            _datasetIndex: 2,
+            _index: 1
+        });
+
+        expect(trapezium.height()).toEqual(0);
+
+        trapezium._view = {
+            y: 0,
+            base: 10,
+            x1: 1,
+            x2: 3,
+            upperWidth: 2,
+            bottomWidth: 5,
+            type :'scalene'
+        };
+
+        expect(trapezium.height()).toEqual(10);
+    });
+
+    it ('should draw correctly, no border', function() {
+        var mockContext = new MockContext();
+        var trapezium = new Chart.elements.Trapezium({
+            _datasetIndex: 2,
+            _index: 1,
+            _chart: {
+                ctx: mockContext
+            }
+        });
+
+        trapezium._view = {
+            y: 0,
+            base: 5,
+            x: 2,
+            upperWidth: 2,
+            bottomWidth: 4
+        };
+
+        trapezium.draw();
+
+        expect(mockContext.getCalls()).toEqual([{
+            name: 'beginPath',
+            args: []
+        }, {
+            name: 'setFillStyle',
+            args: ["rgba(0,0,0,0.1)"]
+        }, {
+            name: 'setStrokeStyle',
+            args: ["rgba(0,0,0,0.1)"]
+        }, {
+            name: 'setLineWidth',
+            args: [0]
+        }, {
+            name: 'moveTo',
+            args: [0,5]
+        }, {
+            name: 'lineTo',
+            args: [1,0]
+        }, {
+            name: 'lineTo',
+            args: [3,0]
+        }, {
+            name: 'lineTo',
+            args: [4,5]
+        }, {
+            name: 'fill',
+            args: []
+        }]);
+    });
+
+    it ('should draw correctly with backgroundColor', function() {
+        var mockContext = new MockContext();
+        var trapezium = new Chart.elements.Trapezium({
+            _datasetIndex: 2,
+            _index: 1,
+            _chart: {
+                ctx: mockContext
+            }
+        });
+
+        trapezium._view = {
+            y: 0,
+            base: 5,
+            x: 2,
+            upperWidth: 2,
+            bottomWidth: 4,
+
+            backgroundColor: "rgba(23,45,223)"
+        };
+
+        trapezium.draw();
+
+        expect(mockContext.getCalls()).toEqual([{
+            name: 'beginPath',
+            args: []
+        }, {
+            name: 'setFillStyle',
+            args: ["rgba(23,45,223)"]
+        }, {
+            name: 'setStrokeStyle',
+            args: ["rgba(0,0,0,0.1)"]
+        }, {
+            name: 'setLineWidth',
+            args: [0]
+        }, {
+            name: 'moveTo',
+            args: [0,5]
+        }, {
+            name: 'lineTo',
+            args: [1,0]
+        }, {
+            name: 'lineTo',
+            args: [3,0]
+        }, {
+            name: 'lineTo',
+            args: [4,5]
+        }, {
+            name: 'fill',
+            args: []
+        }]);
+    })
+
+    it ('should draw correctly with border', function() {
+        var mockContext = new MockContext();
+        var trapezium = new Chart.elements.Trapezium({
+            _datasetIndex: 2,
+            _index: 1,
+            _chart: {
+                ctx: mockContext
+            }
+        });
+
+        trapezium._view = {
+            y: 0,
+            base: 5,
+            x: 2,
+            upperWidth: 2,
+            bottomWidth: 4,
+
+            borderWidth: 3,
+            backgroundColor: "rgba(23,45,223)"
+        };
+
+        trapezium.draw();
+
+        expect(mockContext.getCalls()).toEqual([{
+            name: 'beginPath',
+            args: []
+        }, {
+            name: 'setFillStyle',
+            args: ["rgba(23,45,223)"]
+        }, {
+            name: 'setStrokeStyle',
+            args: ["rgba(0,0,0,0.1)"]
+        }, {
+            name: 'setLineWidth',
+            args: [3]
+        }, {
+            name: 'moveTo',
+            args: [1.5,5]
+        }, {
+            name: 'lineTo',
+            args: [2.5,1.5]
+        }, {
+            name: 'lineTo',
+            args: [1.5,1.5]
+        }, {
+            name: 'lineTo',
+            args: [2.5,5]
+        }, {
+            name: 'fill',
+            args: []
+        }, {
+            name: 'stroke',
+            args: []
+        }]);
+    })
 });
