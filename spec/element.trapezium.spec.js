@@ -3,7 +3,7 @@
 /** globals Chart **/
 var Chart = require('chart.js');
 var MockContext = require('./MockCanvasContext.js');
-require('../src/elements/element.trapezium.js')(Chart);
+require('../src/chart.funnel.js');
 
 describe('Trapezium element tests', function() {
     it ('Should be constructed', function() {
