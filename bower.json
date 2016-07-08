@@ -1,0 +1,23 @@
+{
+  "name": "chartjs-funnel",
+  "description": "The funnel plugin for Chart.js",
+  "main": "dist/chart.funnel.min.js",
+  "authors": [
+    "Jone Casper"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Chart.js",
+    "Chartjs",
+    "funnel",
+    "plugin"
+  ],
+  "homepage": "https://github.com/xch89820/Chart.Funnel.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -18,8 +18,6 @@ npm install chartjs-funnel --save
 
 ## Usage
 
-You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
-
 ![alt tag](https://cloud.githubusercontent.com/assets/4920540/16495890/e6c3aaee-3f21-11e6-868a-40c796613d3c.jpg)
 
 To configure the funnel plugin, you can simply set chart type to `funnel`.
@@ -28,7 +26,7 @@ Simple example:
 ```js
 var config = {
     type: 'funnel',
-	data: {
+    data: {
 		datasets: [{
 			data: [30, 60, 90],
 			backgroundColor: [
@@ -53,6 +51,42 @@ var config = {
 
 Please see `example` folder for more information
 
+You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
+
+## Options
+
+#### sort
+Reverse or not, you can set 'desc' to draw an upside-down funnel.
+
+default is 'asc'.
+
+#### gap
+The gap between to trapezium in our funnel chart. The unit is px.
+
+default is 2
+
+#### topWidth
+The top-width of funnel chart, defualt is 0
+
+#### bottomWidth
+The bottom-width of funnel chart, default use the width of canvas.
+
+#### tooltips
+The tooltips option is a special option for funnel chart, you should be careful if you want to rewrite the option.
+
+The default option is
+```js
+{
+   callbacks: {
+    	title: function (tooltipItem, data) {
+			return '';
+		},
+		label: function (tooltipItem, data) {
+			return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+		}
+	}
+}
+```
 ## License
 
 Chart.Funnel.js is available under the [MIT license](http://opensource.org/licenses/MIT).
