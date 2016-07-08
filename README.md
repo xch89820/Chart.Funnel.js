@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/xch89820/Chart.Funnel.js.svg?branch=master)](https://travis-ci.org/xch89820/Chart.Funnel.js)
 
 # Chart.Funnel.js
-The funnel plugin for Chart.js
+The funnel plugin for Chart.js（v2.0）
 
 ## Installation
 
