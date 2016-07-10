@@ -140,10 +140,71 @@ describe('Funnel controller tests', function() {
             { x:  256, y: 64 ,base:212, upperWidth:0, bottomWidth: 170 },
             { x:  256, y: 214 ,base:362, upperWidth:170, bottomWidth: 341 },
             { x:  256, y: 364 ,base:512, upperWidth:341, bottomWidth: 512 }
-            ].forEach(function(expected, i) {
+        ].forEach(function(expected, i) {
                 expect(meta.data[i]._datasetIndex).toEqual(0);
+                expect(meta.data[i]._model.type).toBe('isosceles');
                 expect(meta.data[i]._index).toBe(i);
                 expect(meta.data[i]._model.x).toBeCloseToPixel(expected.x);
+                expect(meta.data[i]._model.y).toBeCloseToPixel(expected.y);
+                expect(meta.data[i]._model.upperWidth).toBeCloseToPixel(expected.upperWidth);
+                expect(meta.data[i]._model.bottomWidth).toBeCloseToPixel(expected.bottomWidth);
+            });
+    });
+
+    it('should draw elements correctly with keep options', function() {
+        var funnelChart = window.acquireChart({
+            type: 'funnel',
+            data: {
+                datasets: [{
+                    data: [30, 60, 90],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ],
+                    hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ]
+                }],
+                labels: [
+                    "Red",
+                    "Blue",
+                    "Yellow"
+                ]
+            },
+            options: {
+                responsive: true,
+                keep: 'left',
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Funnel Chart'
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+        var meta = funnelChart.getDatasetMeta(0);
+
+        funnelChart.update();
+
+        [
+            { x1:  0, x2: 85.3 , y: 64,base:212, upperWidth:0, bottomWidth: 170 },
+            { x1:  85.3, x2: 170.6, y: 214 ,base:362, upperWidth:170, bottomWidth: 341 },
+            { x1:  170.6, x2: 256, y: 364 ,base:512, upperWidth:341, bottomWidth: 512 }
+        ].forEach(function(expected, i) {
+                expect(meta.data[i]._datasetIndex).toEqual(0);
+                expect(meta.data[i]._index).toBe(i);
+                expect(meta.data[i]._model.type).toBe('scalene');
+                expect(meta.data[i]._model.x1).toBeCloseToPixel(expected.x1);
+                expect(meta.data[i]._model.x2).toBeCloseToPixel(expected.x2);
                 expect(meta.data[i]._model.y).toBeCloseToPixel(expected.y);
                 expect(meta.data[i]._model.upperWidth).toBeCloseToPixel(expected.upperWidth);
                 expect(meta.data[i]._model.bottomWidth).toBeCloseToPixel(expected.bottomWidth);

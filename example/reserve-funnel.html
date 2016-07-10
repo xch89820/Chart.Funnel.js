@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Funnel Chart</title>
+    <script src="../dist/chart.funnel.bundled.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="canvas-holder" style="width:400px;">
+    <canvas id="chart-area" height="250"></canvas>
+</div>
+<script>
+    var config = {
+        type: 'funnel',
+        data: {
+            datasets: [{
+                data: [10, 35, 90],
+                backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ],
+                hoverBackgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56"
+                ]
+            }],
+            labels: [
+                "Red",
+                "Blue",
+                "Yellow"
+            ]
+        },
+        options: {
+            responsive: true,
+            sort: 'desc',
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Funnel Chart'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById("chart-area").getContext("2d");
+        window.myDoughnut = new Chart(ctx, config);
+    };
+</script>
+</body>
+</html>

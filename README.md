@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/xch89820/Chart.Funnel.js.svg?branch=master)](https://travis-ci.org/xch89820/Chart.Funnel.js)
 
 # Chart.Funnel.js
-The funnel plugin for Chart.js（v2.0）
+The funnel plugin for Chart.js > 2.0
 
 ## Installation
 
@@ -64,6 +64,11 @@ default is 'asc'.
 The gap between to trapezium in our funnel chart. The unit is px.
 
 default is 2
+
+#### keep
+Draw element against left or right side.
+
+default is 'auto'.
 
 #### topWidth
 The top-width of funnel chart, defualt is 0

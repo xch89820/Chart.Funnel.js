@@ -1,7 +1,7 @@
 /*!
  * Chart.Funnel.js
  * A funnel plugin for Chart.js(http://chartjs.org/)
- * Version: 1.0.0
+ * Version: 1.0.2
  *
  * Copyright 2016 Jone Casaper
  * Released under the MIT license
@@ -64,13 +64,11 @@ module.exports = function(Chart) {
 		hover: {
 			mode: "label"
 		},
-		// sort options: 'asc', 'desc'
-		sort: 'asc',
+		sort: 'asc',// sort options: 'asc', 'desc'
 		gap: 2,
-		// the bottom width of funnel
-		bottomWidth: null,
-		// the top width of funnel
-		topWidth: 0,
+		bottomWidth: null,// the bottom width of funnel
+		topWidth: 0, // the top width of funnel
+		keep: 'auto', // Keep left or right
 		elements: {
 			borderWidth: 0
 		},
@@ -240,7 +238,6 @@ module.exports = function(Chart) {
 			var me = this,
 				chart = me.chart,
 				chartArea = chart.chartArea,
-				x = (chartArea.left + chartArea.right) / 2,
 				opts = chart.options,
 				sort = opts.sort,
 				dwRatio = me.dwRatio,
@@ -248,9 +245,11 @@ module.exports = function(Chart) {
 				gap = opts.gap || 0,
 				borderWidth = opts.elements.borderWidth || 0;
 
-			var elementData = me.sortedDataAndLabels[index], upperWidth, bottomWidth,
+			// calculate x,y,base, width,etc.
+			var x, y, x1, x2,
+				elementType = 'isosceles',
+				elementData = me.sortedDataAndLabels[index], upperWidth, bottomWidth,
 				viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
-				y = chartArea.top + viewIndex * (elHeight + gap),
 				base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
 
 			if (sort === 'asc') {
@@ -274,6 +273,19 @@ module.exports = function(Chart) {
 				bottomWidth = nextElement ? nextElement.val * dwRatio : me.topWidth;
 			}
 
+			y = chartArea.top + viewIndex * (elHeight + gap);
+			if (opts.keep === 'left') {
+				elementType = 'scalene';
+				x1 = chartArea.left + upperWidth / 2;
+				x2 = chartArea.left + bottomWidth / 2;
+			} else if (opts.keep === 'right') {
+				elementType = 'scalene';
+				x1 = chartArea.right - upperWidth/ 2;
+				x2 = chartArea.right - bottomWidth / 2;
+			} else {
+				x = (chartArea.left + chartArea.right) / 2;
+			}
+
 			helpers.extend(trapezium, {
 				// Utility
 				_datasetIndex: me.index,
@@ -281,9 +293,12 @@ module.exports = function(Chart) {
 
 				// Desired view properties
 				_model: {
+					type: elementType,
 					y: y,
 					base: base > chartArea.bottom ? chartArea.bottom : base,
 					x: x,
+					x1: x1,
+					x2: x2,
 					upperWidth: (reset || !!elementData.hidden) ? 0 : upperWidth,
 					bottomWidth: (reset || !!elementData.hidden) ? 0 : bottomWidth,
 					borderWidth: borderWidth,
