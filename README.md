@@ -19,7 +19,6 @@ npm install chartjs-funnel --save
 ## Usage
 
 ![alt tag](https://cloud.githubusercontent.com/assets/4920540/16495890/e6c3aaee-3f21-11e6-868a-40c796613d3c.jpg)
-
 To configure the funnel plugin, you can simply set chart type to `funnel`.
 
 Simple example:
@@ -49,7 +48,13 @@ var config = {
 }
 ```
 
+Funnel chart support upside-down drawing or against left or right side drawing.
+
 Please see `example` folder for more information
+
+![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711980/d7c7a65a-46a9-11e6-94f2-6a3fdc8c79a1.JPG)
+![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711969/427ac258-46a9-11e6-8f93-86abf82ed89e.JPG)
+
 
 You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
 
