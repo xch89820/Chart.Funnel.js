@@ -1,6 +1,6 @@
 {
   "name": "chartjs-funnel",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The funnel plugin for Chart.js",
   "main": "dist/chart.funnel.min.js",
   "directories": {
