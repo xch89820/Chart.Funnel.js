@@ -1,7 +1,7 @@
 {
   "name": "chartjs-funnel",
   "description": "The funnel plugin for Chart.js",
-  "main": "dist/chart.funnel.min.js",
+  "main": "dist/chart.funnel.js",
   "authors": [
     "Jone Casper"
   ],
