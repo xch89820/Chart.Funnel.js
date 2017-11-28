@@ -1,7 +1,7 @@
 /*!
  * Chart.Funnel.js
  * A funnel plugin for Chart.js(http://chartjs.org/)
- * Version: 1.0.2
+ * Version: 1.0.6
  *
  * Copyright 2016 Jone Casaper
  * Released under the MIT license
@@ -470,6 +470,13 @@ module.exports = function(Chart) {
 			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
 			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
 
+		},
+		getCenterPoint: function () {
+				var vm = this._view;
+				return {
+						x: vm.x,
+						y: vm.y
+				};
 		},
 		tooltipPosition: function () {
 			var vm = this._view;
