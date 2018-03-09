@@ -119,14 +119,39 @@ module.exports = function(Chart) {
 
 				chart.update();
 			}
-		}
+		},
+		scales: {
+			yAxes: [{
+				position: 'left',
+				type: 'category',
+				display:false,
+				// Specific to Horizontal Bar Controller
+				categoryPercentage: 0.8,
+				barPercentage: 0.9,
+
+				// offset settings
+				offset: true,
+
+				// grid line settings
+				gridLines: {
+					offsetGridLines: true
+				}
+			}]
+		},
 	};
 
 	Chart.controllers.funnel = Chart.DatasetController.extend({
 
 		dataElementType: Chart.elements.Trapezium,
 
-		linkScales: helpers.noop,
+		linkScales: function() {
+			var me = this;
+			var meta = me.getMeta();
+			var dataset = me.getDataset();
+			if (meta.yAxisID === null || !(meta.yAxisID in me.chart.scales)) {
+				meta.yAxisID = dataset.yAxisID || me.chart.options.scales.yAxes[0].id;
+			}
+		},
 
 		update: function update(reset) {
 			var me = this;
@@ -220,6 +245,10 @@ module.exports = function(Chart) {
 				elementData = me.sortedDataAndLabels[index], upperWidth, bottomWidth,
 				viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
 				base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
+
+			var meta = me.getMeta();
+			trapezium._yScale = me.getScaleForId(meta.yAxisID);
+			//trapezium._xScale = me.getScaleForId(meta.xAxisID);
 
 			if (sort === 'asc') {
 				// Find previous element which is visible

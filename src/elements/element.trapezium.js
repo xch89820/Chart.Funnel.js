@@ -39,7 +39,7 @@ module.exports = function(Chart) {
 		return inside;
 	};
 
-	Chart.elements.Trapezium = Chart.Element.extend({
+	Chart.elements.Trapezium = Chart.elements.Rectangle.extend({
 		getCorners: function () {
 			var vm = this._view;
 			var globalOptionTrapeziumElements = globalOpts.elements.trapezium;
