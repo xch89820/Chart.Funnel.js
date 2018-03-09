@@ -34,7 +34,7 @@ module.exports = function(Chart) {
 			mode: "label"
 		},
 		sort: 'asc',// sort options: 'asc', 'desc'
-		gap: 2,
+		gap: 0,
 		bottomWidth: null,// the bottom width of funnel
 		topWidth: 0, // the top width of funnel
 		keep: 'auto', // Keep left or right
@@ -180,7 +180,6 @@ module.exports = function(Chart) {
 			helpers.each(dataset.data, function (val, index) {
 				var backgroundColor = helpers.getValueAtIndexOrDefault(dataset.backgroundColor, index),
 					hidden = elements[index].hidden;
-				//if (!elements[index].hidden) {
 				valAndLabels.push({
 					hidden: hidden,
 					orgIndex: index,
@@ -189,7 +188,6 @@ module.exports = function(Chart) {
 					borderColor: helpers.getValueAtIndexOrDefault(dataset.borderColor, index, backgroundColor),
 					label: helpers.getValueAtIndexOrDefault(dataset.label, index, chart.data.labels[index])
 				});
-				//}
 				if (!elements[index].hidden) {
 					visiableNum++;
 					dMax = val > dMax ? val : dMax;
@@ -248,7 +246,6 @@ module.exports = function(Chart) {
 
 			var meta = me.getMeta();
 			trapezium._yScale = me.getScaleForId(meta.yAxisID);
-			//trapezium._xScale = me.getScaleForId(meta.xAxisID);
 
 			if (sort === 'asc') {
 				// Find previous element which is visible
