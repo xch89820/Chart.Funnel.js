@@ -66,7 +66,7 @@ module.exports = function(Chart) {
 			mode: "label"
 		},
 		sort: 'asc',// sort options: 'asc', 'desc'
-		gap: 2,
+		gap: 0,
 		bottomWidth: null,// the bottom width of funnel
 		topWidth: 0, // the top width of funnel
 		keep: 'auto', // Keep left or right
@@ -153,9 +153,6 @@ module.exports = function(Chart) {
 			}
 		},
 		scales: {
-			xAxes:[{
-				display:false
-			}],
 			yAxes: [{
 				position: 'left',
 				type: 'category',
@@ -179,13 +176,27 @@ module.exports = function(Chart) {
 
 		dataElementType: Chart.elements.Trapezium,
 
+		initialize:function(chart, datasetIndex){
+			Chart.controllers.bar.prototype.initialize.call(this,chart,datasetIndex);
+			// reverse all arrays from dataset if needed
+			if(typeof chart.options!=='undefined' && typeof chart.options.sort!=='undefined' && chart.options.sort==='desc'){
+				chart.data.labels.reverse();
+				var dataset = chart.data.datasets[datasetIndex];
+				var keys = Object.keys(dataset);
+				for(var i=0,len=keys.length;i<len;i++){
+					var key = keys[i];
+					var val = dataset[key];
+					if(dataset.hasOwnProperty(key) && Array.isArray(val)){
+						val.reverse();
+					}
+				}
+			}
+		},
+
 		linkScales: function() {
 			var me = this;
 			var meta = me.getMeta();
 			var dataset = me.getDataset();
-			/*if (meta.xAxisID === null || !(meta.xAxisID in me.chart.scales)) {
-				meta.xAxisID = dataset.xAxisID || me.chart.options.scales.xAxes[0].id;
-			}*/
 			if (meta.yAxisID === null || !(meta.yAxisID in me.chart.scales)) {
 				meta.yAxisID = dataset.yAxisID || me.chart.options.scales.yAxes[0].id;
 			}
@@ -218,7 +229,6 @@ module.exports = function(Chart) {
 			helpers.each(dataset.data, function (val, index) {
 				var backgroundColor = helpers.getValueAtIndexOrDefault(dataset.backgroundColor, index),
 					hidden = elements[index].hidden;
-				//if (!elements[index].hidden) {
 				valAndLabels.push({
 					hidden: hidden,
 					orgIndex: index,
@@ -227,7 +237,6 @@ module.exports = function(Chart) {
 					borderColor: helpers.getValueAtIndexOrDefault(dataset.borderColor, index, backgroundColor),
 					label: helpers.getValueAtIndexOrDefault(dataset.label, index, chart.data.labels[index])
 				});
-				//}
 				if (!elements[index].hidden) {
 					visiableNum++;
 					dMax = val > dMax ? val : dMax;
@@ -249,7 +258,6 @@ module.exports = function(Chart) {
 			helpers.each(sortedDataAndLabels, function (dal, index) {
 				dal._viewIndex = !dal.hidden ? _viewIndex++ : -1;
 			});
-
 			// Elements height calculation
 			var gap = opts.gap || 0,
 				elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
@@ -286,7 +294,6 @@ module.exports = function(Chart) {
 
 			var meta = me.getMeta();
 			trapezium._yScale = me.getScaleForId(meta.yAxisID);
-			//trapezium._xScale = me.getScaleForId(meta.xAxisID);
 
 			if (sort === 'asc') {
 				// Find previous element which is visible
@@ -309,7 +316,7 @@ module.exports = function(Chart) {
 				bottomWidth = nextElement ? nextElement.val * dwRatio : me.topWidth;
 			}
 
-			y = chartArea.top + viewIndex * (elHeight + gap);
+			y = chartArea.top + elementData.orgIndex * (elHeight + gap);
 			if (opts.keep === 'left') {
 				elementType = 'scalene';
 				x1 = chartArea.left + upperWidth / 2;
@@ -343,7 +350,6 @@ module.exports = function(Chart) {
 					label: elementData && elementData.label
 				}
 			});
-
 			trapezium.pivot();
 		},
 		removeHoverStyle: function (trapezium) {

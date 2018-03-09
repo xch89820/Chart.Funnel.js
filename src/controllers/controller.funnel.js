@@ -144,6 +144,23 @@ module.exports = function(Chart) {
 
 		dataElementType: Chart.elements.Trapezium,
 
+		initialize:function(chart, datasetIndex){
+			Chart.controllers.bar.prototype.initialize.call(this,chart,datasetIndex);
+			// reverse all arrays from dataset if needed
+			if(typeof chart.options!=='undefined' && typeof chart.options.sort!=='undefined' && chart.options.sort==='desc'){
+				chart.data.labels.reverse();
+				var dataset = chart.data.datasets[datasetIndex];
+				var keys = Object.keys(dataset);
+				for(var i=0,len=keys.length;i<len;i++){
+					var key = keys[i];
+					var val = dataset[key];
+					if(dataset.hasOwnProperty(key) && Array.isArray(val)){
+						val.reverse();
+					}
+				}
+			}
+		},
+
 		linkScales: function() {
 			var me = this;
 			var meta = me.getMeta();
@@ -267,7 +284,7 @@ module.exports = function(Chart) {
 				bottomWidth = nextElement ? nextElement.val * dwRatio : me.topWidth;
 			}
 
-			y = chartArea.top + viewIndex * (elHeight + gap);
+			y = chartArea.top + elementData.orgIndex * (elHeight + gap);
 			if (opts.keep === 'left') {
 				elementType = 'scalene';
 				x1 = chartArea.left + upperWidth / 2;
@@ -283,7 +300,7 @@ module.exports = function(Chart) {
 			helpers.extend(trapezium, {
 				// Utility
 				_datasetIndex: me.index,
-				_index: viewIndex,
+				_index: elementData.orgIndex,
 
 				// Desired view properties
 				_model: {
