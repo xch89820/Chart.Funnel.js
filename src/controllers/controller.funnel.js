@@ -209,7 +209,6 @@ module.exports = function(Chart) {
 			helpers.each(sortedDataAndLabels, function (dal, index) {
 				dal._viewIndex = !dal.hidden ? _viewIndex++ : -1;
 			});
-
 			// Elements height calculation
 			var gap = opts.gap || 0,
 				elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
@@ -284,7 +283,7 @@ module.exports = function(Chart) {
 			helpers.extend(trapezium, {
 				// Utility
 				_datasetIndex: me.index,
-				_index: elementData.orgIndex,
+				_index: viewIndex,
 
 				// Desired view properties
 				_model: {
@@ -302,21 +301,7 @@ module.exports = function(Chart) {
 					label: elementData && elementData.label
 				}
 			});
-
 			trapezium.pivot();
-		},
-		setHoverStyle: function(element) {
-			//console.log('hover style',element)
-			var dataset = this.chart.data.datasets[element._datasetIndex];
-			var index = element._index;
-			var custom = element.custom || {};
-			var valueOrDefault = helpers.valueAtIndexOrDefault;
-			var getHoverColor = helpers.getHoverColor;
-			var model = element._model;
-
-			model.backgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : valueOrDefault(dataset.hoverBackgroundColor, index, getHoverColor(model.backgroundColor));
-			model.borderColor = custom.hoverBorderColor ? custom.hoverBorderColor : valueOrDefault(dataset.hoverBorderColor, index, getHoverColor(model.borderColor));
-			model.borderWidth = custom.hoverBorderWidth ? custom.hoverBorderWidth : valueOrDefault(dataset.hoverBorderWidth, index, model.borderWidth);
 		},
 		removeHoverStyle: function (trapezium) {
 			Chart.DatasetController.prototype.removeHoverStyle.call(this, trapezium, this.chart.options.elements.trapezium);
