@@ -151,7 +151,6 @@ module.exports = function(Chart) {
 
 			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
 			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
-
 		},
 		tooltipPosition: function () {
 			var vm = this._view;
@@ -159,6 +158,34 @@ module.exports = function(Chart) {
 				x: vm.x || vm.x2,
 				y: vm.base - (vm.base - vm.y)/2
 			};
-		}
+		},
+		getArea: function () {
+			var vm = this._view;
+			var total = 0;
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			for (var i = 0, l = corners.length; i < l; i++) {
+				var addX = corners[i][0];
+				var addY = corners[i == corners.length - 1 ? 0 : i + 1][1];
+				var subX = corners[i == corners.length - 1 ? 0 : i + 1][0];
+				var subY = corners[i][1];
+				total += (addX * addY * 0.5);
+				total -= (subX * subY * 0.5);
+			}
+			return Math.abs(total);
+		},
+		getCenterPoint: function () {
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			var vm = this._view;
+			var x = 0, y = 0, i, j, f, point1, point2;
+			for (i = 0, j = corners.length - 1; i < corners.length; j = i, i++) {
+				point1 = corners[i];
+				point2 = corners[j];
+				f = point1[0] * point2[1] - point2[0] * point1[1];
+				x += (point1[0] + point2[0]) * f;
+				y += (point1[1] + point2[1]) * f;
+			}
+			f = this.getArea() * 6;
+			return {x:x / f, y:y / f};
+		},
 	});
 };

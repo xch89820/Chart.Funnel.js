@@ -1,13 +1,13 @@
 /*!
  * Chart.Funnel.js
  * A funnel plugin for Chart.js(http://chartjs.org/)
- * Version: 1.0.2
+ * Version: 1.0.5
  *
  * Copyright 2016 Jone Casaper
  * Released under the MIT license
  * https://github.com/xch89820/Chart.Funnel.js/blob/master/LICENSE.md
  */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.Chart || (g.Chart = {})).Funnel = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.Chart || (g.Chart = {})).Funnel = f()}})(function(){var define,module,exports;return (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
 /**
@@ -28,6 +28,7 @@ require(4)(Chart);
 require(3)(Chart);
 
 module.exports = Chart;
+
 },{"1":1,"3":3,"4":4}],3:[function(require,module,exports){
 /**
  *
@@ -469,7 +470,6 @@ module.exports = function(Chart) {
 
 			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
 			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
-
 		},
 		tooltipPosition: function () {
 			var vm = this._view;
@@ -477,8 +477,37 @@ module.exports = function(Chart) {
 				x: vm.x || vm.x2,
 				y: vm.base - (vm.base - vm.y)/2
 			};
-		}
+		},
+		getArea: function () {
+			var vm = this._view;
+			var total = 0;
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			for (var i = 0, l = corners.length; i < l; i++) {
+				var addX = corners[i][0];
+				var addY = corners[i == corners.length - 1 ? 0 : i + 1][1];
+				var subX = corners[i == corners.length - 1 ? 0 : i + 1][0];
+				var subY = corners[i][1];
+				total += (addX * addY * 0.5);
+				total -= (subX * subY * 0.5);
+			}
+			return Math.abs(total);
+		},
+		getCenterPoint: function () {
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			var vm = this._view;
+			var x = 0, y = 0, i, j, f, point1, point2;
+			for (i = 0, j = corners.length - 1; i < corners.length; j = i, i++) {
+				point1 = corners[i];
+				point2 = corners[j];
+				f = point1[0] * point2[1] - point2[0] * point1[1];
+				x += (point1[0] + point2[0]) * f;
+				y += (point1[1] + point2[1]) * f;
+			}
+			f = this.getArea() * 6;
+			return {x:x / f, y:y / f};
+		},
 	});
 };
+
 },{}]},{},[2])(2)
 });
