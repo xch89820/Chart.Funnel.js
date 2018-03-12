@@ -18,7 +18,13 @@ npm install chartjs-plugin-funnel --save
 
 ## Usage
 
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270921-0021a42c-25d1-11e8-8823-926758ad0061.jpg)
 
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270922-003b924c-25d1-11e8-9795-11a6dc35c68a.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270924-00574fd2-25d1-11e8-933d-1a07ee16862d.jpg)
 
 
 To configure the funnel plugin, you can simply set chart type to `funnel`.
@@ -52,10 +58,7 @@ var config = {
 
 Funnel chart support upside-down drawing or against left or right side drawing.
 
-Please see `example` folder for more information
-
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711980/d7c7a65a-46a9-11e6-94f2-6a3fdc8c79a1.JPG)
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711969/427ac258-46a9-11e6-8f93-86abf82ed89e.JPG)
+This plugin works with datalabels plugin.
 
 
 You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
