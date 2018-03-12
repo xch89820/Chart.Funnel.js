@@ -1,19 +1,19 @@
-[![NPM version][npm-version-image]][npm-url] 
-[![NPM downloads][npm-downloads-image]][npm-url] 
+[![NPM version][npm-version-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
 [![MIT License][license-image]][license-url]
 [![Build Status](https://travis-ci.org/xch89820/Chart.Funnel.js.svg?branch=master)](https://travis-ci.org/xch89820/Chart.Funnel.js)
 
-# Chart.Funnel.js
-The funnel plugin for Chart.js > 2.0
+# chartjs-plugin-funnel
+The funnel plugin for Chart.js > 2.7
 
 ## Installation
 
-To download a zip, go to the Chart.Funnel.js on Github
+To download a zip, go to the chartjs-plugin-funnel on Github
 
 To install via npm / bower:
 
 ```bash
-npm install chartjs-funnel --save
+npm install chartjs-plugin-funnel --save
 ```
 
 ## Usage
@@ -43,7 +43,7 @@ var config = {
 			"Red",
 			"Blue",
 			"Yellow"
-		]	
+		]
 	}
 }
 ```
