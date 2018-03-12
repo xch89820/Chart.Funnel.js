@@ -18,7 +18,9 @@ npm install chartjs-plugin-funnel --save
 
 ## Usage
 
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16495890/e6c3aaee-3f21-11e6-868a-40c796613d3c.jpg)
+
+
+
 To configure the funnel plugin, you can simply set chart type to `funnel`.
 
 Simple example:
@@ -104,7 +106,7 @@ Chart.Funnel.js is available under the [MIT license](http://opensource.org/licen
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: http://opensource.org/licenses/MIT
 
-[npm-url]: https://www.npmjs.com/package/chartjs-funnel
-[npm-version-image]: http://img.shields.io/npm/v/chartjs-funnel.svg?style=flat
+[npm-url]: https://www.npmjs.com/package/chartjs-plugin-funnel
+[npm-version-image]: http://img.shields.io/npm/v/chartjs-plugin-funnel.svg?style=flat
 
-[npm-downloads-image]: http://img.shields.io/npm/dm/chartjs-funnel.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/chartjs-plugin-funnel.svg?style=flat
