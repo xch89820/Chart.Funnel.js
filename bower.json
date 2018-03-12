@@ -3,7 +3,7 @@
   "description": "The funnel plugin for Chart.js",
   "main": "dist/chart.funnel.js",
   "authors": [
-    "Jone Casper"
+    "Jone Casper & YetiForce"
   ],
   "license": "MIT",
   "keywords": [
@@ -12,7 +12,7 @@
     "funnel",
     "plugin"
   ],
-  "homepage": "https://github.com/rafalpospiech/chartjs-plugin-funnel",
+  "homepage": "https://github.com/YetiForceCompany/chartjs-plugin-funnel",
   "ignore": [
     "**/.*",
     "node_modules",

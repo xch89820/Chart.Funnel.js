@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rafalpospiech/chartjs-plugin-funnel"
+    "url": "https://github.com/YetiForceCompany/chartjs-plugin-funnel"
   },
   "keywords": [
     "Chart.js",
@@ -48,10 +48,10 @@
     "funnel",
     "plugin"
   ],
-  "author": "Jone Casper",
+  "author": "Jone Casper & YetiForce",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rafalpospiech/chartjs-plugin-funnel/issues"
   },
-  "homepage": "https://github.com/rafalpospiech/chartjs-plugin-funnel"
+  "homepage": "https://github.com/YetiForceCompany/chartjs-plugin-funnel"
 }
