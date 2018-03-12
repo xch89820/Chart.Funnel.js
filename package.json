@@ -7,7 +7,7 @@
     "example": "example"
   },
   "dependencies": {
-    "chart.js": ">2.1.0"
+    "chart.js": ">2.7.0"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xch89820/Chart.Funnel.js"
+    "url": "https://github.com/rafalpospiech/chartjs-plugin-funnel"
   },
   "keywords": [
     "Chart.js",
@@ -51,7 +51,7 @@
   "author": "Jone Casper",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xch89820/Chart.Funnel.js/issues"
+    "url": "https://github.com/rafalpospiech/chartjs-plugin-funnel/issues"
   },
-  "homepage": "https://github.com/xch89820/Chart.Funnel.js"
+  "homepage": "https://github.com/rafalpospiech/chartjs-plugin-funnel"
 }
