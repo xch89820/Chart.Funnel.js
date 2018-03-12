@@ -26,16 +26,16 @@
 
 "use strict";
 
-module.exports = function(Chart) {
+module.exports = function (Chart) {
 	var helpers = Chart.helpers;
 
 	Chart.defaults.funnel = {
 		hover: {
 			mode: "label"
 		},
-		sort: 'asc',// sort options: 'asc', 'desc'
+		sort: 'asc', // sort options: 'asc', 'desc'
 		gap: 0,
-		bottomWidth: null,// the bottom width of funnel
+		bottomWidth: null, // the bottom width of funnel
 		topWidth: 0, // the top width of funnel
 		keep: 'auto', // Keep left or right
 		elements: {
@@ -122,21 +122,21 @@ module.exports = function(Chart) {
 		},
 		scales: {
 			yAxes: [{
-				position: 'left',
-				type: 'category',
-				display:false,
-				// Specific to Horizontal Bar Controller
-				categoryPercentage: 0.8,
-				barPercentage: 0.9,
+					position: 'left',
+					type: 'category',
+					display: false,
+					// Specific to Horizontal Bar Controller
+					categoryPercentage: 0.8,
+					barPercentage: 0.9,
 
-				// offset settings
-				offset: true,
+					// offset settings
+					offset: true,
 
-				// grid line settings
-				gridLines: {
-					offsetGridLines: true
-				}
-			}]
+					// grid line settings
+					gridLines: {
+						offsetGridLines: true
+					}
+				}]
 		},
 	};
 
@@ -144,24 +144,40 @@ module.exports = function(Chart) {
 
 		dataElementType: Chart.elements.Trapezium,
 
-		initialize:function(chart, datasetIndex){
-			Chart.controllers.bar.prototype.initialize.call(this,chart,datasetIndex);
-			// reverse all arrays from dataset if needed
-			if(typeof chart.options!=='undefined' && typeof chart.options.sort!=='undefined' && chart.options.sort==='desc'){
-				chart.data.labels.reverse();
+		initialize: function (chart, datasetIndex) {
+			Chart.controllers.bar.prototype.initialize.call(this, chart, datasetIndex);
+			// sort arrays
+			if (typeof chart.options !== 'undefined' && typeof chart.options.sort !== 'undefined' && chart.options.sort.substr(0, 4) !== 'data') {
 				var dataset = chart.data.datasets[datasetIndex];
+				var dataPositions = [];
+				var originalData = dataset.data.slice();
+				helpers.each(dataset.data, function (item, index) {
+					dataPositions.push({index, value: item});
+				});
+				dataPositions.sort(function (a, b) {
+					return chart.options.sort === 'asc' ? a.value - b.value : b.value - a.value;
+				});
+				// sort labels in the same manner as data sort order
+				var labels = chart.data.labels.map((value, index) => {
+					return chart.data.labels[ dataPositions[index].index ];
+				});
+				chart.data.labels = labels;
+				// sort other arrays inside datasets
 				var keys = Object.keys(dataset);
-				for(var i=0,len=keys.length;i<len;i++){
+				for (var i = 0, len = keys.length; i < len; i++) {
 					var key = keys[i];
-					var val = dataset[key];
-					if(dataset.hasOwnProperty(key) && Array.isArray(val)){
-						val.reverse();
+					var arr = dataset[key];
+					if (dataset.hasOwnProperty(key) && Array.isArray(arr)) {
+						var sortedArr = arr.map((item, index) => {
+							return arr[dataPositions[index].index];
+						});
+						dataset[key] = sortedArr;
 					}
 				}
 			}
 		},
 
-		linkScales: function() {
+		linkScales: function () {
 			var me = this;
 			var meta = me.getMeta();
 			var dataset = me.getDataset();
@@ -173,30 +189,29 @@ module.exports = function(Chart) {
 		update: function update(reset) {
 			var me = this;
 			var chart = me.chart,
-				chartArea = chart.chartArea,
-				opts = chart.options,
-				meta = me.getMeta(),
-				elements = meta.data,
-				borderWidth = opts.elements.borderWidth || 0,
-				availableWidth = chartArea.right - chartArea.left - borderWidth * 2,
-				availableHeight = chartArea.bottom - chartArea.top - borderWidth * 2;
+					chartArea = chart.chartArea,
+					opts = chart.options,
+					meta = me.getMeta(),
+					elements = meta.data,
+					borderWidth = opts.elements.borderWidth || 0,
+					availableWidth = chartArea.right - chartArea.left - borderWidth * 2,
+					availableHeight = chartArea.bottom - chartArea.top - borderWidth * 2;
 
 			// top and bottom width
 			var bottomWidth = availableWidth,
-				topWidth = (opts.topWidth < availableWidth ? opts.topWidth : availableWidth) || 0;
+					topWidth = (opts.topWidth < availableWidth ? opts.topWidth : availableWidth) || 0;
 			if (opts.bottomWidth) {
 				bottomWidth = opts.bottomWidth < availableWidth ? opts.bottomWidth : availableWidth;
 			}
 
 			// percentage calculation and sort data
-			var sort = opts.sort,
-				dataset = me.getDataset(),
-				valAndLabels = [],
-				visiableNum = 0,
-				dMax = 0;
+			var dataset = me.getDataset(),
+					valAndLabels = [],
+					visiableNum = 0,
+					dMax = 0;
 			helpers.each(dataset.data, function (val, index) {
 				var backgroundColor = helpers.getValueAtIndexOrDefault(dataset.backgroundColor, index),
-					hidden = elements[index].hidden;
+						hidden = elements[index].hidden;
 				valAndLabels.push({
 					hidden: hidden,
 					orgIndex: index,
@@ -210,32 +225,21 @@ module.exports = function(Chart) {
 					dMax = val > dMax ? val : dMax;
 				}
 			});
-			var dwRatio = bottomWidth / dMax,
-				sortedDataAndLabels = valAndLabels.sort(
-					sort === 'asc' ?
-						function (a, b) {
-							return a.val - b.val;
-						} :
-						function (a, b) {
-							return b.val - a.val;
-						}
-				);
+			var dwRatio = bottomWidth / dMax;
 			// For render hidden view
-			// TODO: optimization....
 			var _viewIndex = 0;
-			helpers.each(sortedDataAndLabels, function (dal, index) {
+			helpers.each(valAndLabels, function (dal, index) {
 				dal._viewIndex = !dal.hidden ? _viewIndex++ : -1;
 			});
 			// Elements height calculation
 			var gap = opts.gap || 0,
-				elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
+					elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
 
 			// save
 			me.topWidth = topWidth;
 			me.dwRatio = dwRatio;
 			me.elHeight = elHeight;
-			me.sortedDataAndLabels = sortedDataAndLabels;
-
+			me.valAndLabels = valAndLabels;
 			helpers.each(elements, function (trapezium, index) {
 				me.updateElement(trapezium, index, reset);
 			}, me);
@@ -244,42 +248,42 @@ module.exports = function(Chart) {
 		// update elements
 		updateElement: function updateElement(trapezium, index, reset) {
 			var me = this,
-				chart = me.chart,
-				chartArea = chart.chartArea,
-				opts = chart.options,
-				sort = opts.sort,
-				dwRatio = me.dwRatio,
-				elHeight = me.elHeight,
-				gap = opts.gap || 0,
-				borderWidth = opts.elements.borderWidth || 0;
+					chart = me.chart,
+					chartArea = chart.chartArea,
+					opts = chart.options,
+					sort = opts.sort,
+					dwRatio = me.dwRatio,
+					elHeight = me.elHeight,
+					gap = opts.gap || 0,
+					borderWidth = opts.elements.borderWidth || 0;
 
 			// calculate x,y,base, width,etc.
 			var x, y, x1, x2,
-				elementType = 'isosceles',
-				elementData = me.sortedDataAndLabels[index], upperWidth, bottomWidth,
-				viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
-				base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
+					elementType = 'isosceles',
+					elementData = me.valAndLabels[index], upperWidth, bottomWidth,
+					viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
+					base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
 
 			var meta = me.getMeta();
 			trapezium._yScale = me.getScaleForId(meta.yAxisID);
 
-			if (sort === 'asc') {
+			if (sort === 'asc' || sort === 'data-asc' || !sort) {
 				// Find previous element which is visible
-				var previousElement = helpers.findPreviousWhere(me.sortedDataAndLabels,
-					function (el) {
-						return !el.hidden;
-					},
-					index
-				);
+				var previousElement = helpers.findPreviousWhere(me.valAndLabels,
+						function (el) {
+							return !el.hidden;
+						},
+						index
+						);
 				upperWidth = previousElement ? previousElement.val * dwRatio : me.topWidth;
 				bottomWidth = elementData.val * dwRatio;
-			} else {
-				var nextElement = helpers.findNextWhere(me.sortedDataAndLabels,
-					function (el) {
-						return !el.hidden;
-					},
-					index
-				);
+			} else if (sort === 'desc' || sort === 'data-desc') {
+				var nextElement = helpers.findNextWhere(me.valAndLabels,
+						function (el) {
+							return !el.hidden;
+						},
+						index
+						);
 				upperWidth = elementData.val * dwRatio;
 				bottomWidth = nextElement ? nextElement.val * dwRatio : me.topWidth;
 			}
@@ -289,10 +293,12 @@ module.exports = function(Chart) {
 				elementType = 'scalene';
 				x1 = chartArea.left + upperWidth / 2;
 				x2 = chartArea.left + bottomWidth / 2;
+				x = x1;
 			} else if (opts.keep === 'right') {
 				elementType = 'scalene';
-				x1 = chartArea.right - upperWidth/ 2;
+				x1 = chartArea.right - upperWidth / 2;
 				x2 = chartArea.right - bottomWidth / 2;
+				x = x1;
 			} else {
 				x = (chartArea.left + chartArea.right) / 2;
 			}

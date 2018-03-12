@@ -16,7 +16,7 @@ To install via npm / bower:
 npm install chartjs-plugin-funnel --save
 ```
 
-## Usage
+## Preview
 
 ![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270921-0021a42c-25d1-11e8-8823-926758ad0061.jpg)
 
@@ -26,6 +26,14 @@ npm install chartjs-plugin-funnel --save
 
 ![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270924-00574fd2-25d1-11e8-933d-1a07ee16862d.jpg)
 
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37288346-514d2f0c-2607-11e8-8bcb-eacabd470d8f.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37288348-521abcb0-2607-11e8-87cb-b52fc5575f44.jpg)
+
+
+## Usage
 
 To configure the funnel plugin, you can simply set chart type to `funnel`.
 
@@ -93,7 +101,7 @@ The default option is
 ```js
 {
    callbacks: {
-    	title: function (tooltipItem, data) {
+		title: function (tooltipItem, data) {
 			return '';
 		},
 		label: function (tooltipItem, data) {

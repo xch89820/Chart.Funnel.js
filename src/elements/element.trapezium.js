@@ -8,9 +8,9 @@
 
 "use strict";
 
-module.exports = function(Chart) {
+module.exports = function (Chart) {
 	var helpers = Chart.helpers,
-		globalOpts = Chart.defaults.global;
+			globalOpts = Chart.defaults.global;
 
 	globalOpts.elements.trapezium = {
 		backgroundColor: globalOpts.defaultColor,
@@ -33,7 +33,8 @@ module.exports = function(Chart) {
 			var xj = vs[j][0], yj = vs[j][1];
 
 			var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-			if (intersect) inside = !inside;
+			if (intersect)
+				inside = !inside;
 		}
 
 		return inside;
@@ -45,12 +46,12 @@ module.exports = function(Chart) {
 			var globalOptionTrapeziumElements = globalOpts.elements.trapezium;
 
 			var corners = [],
-				type = vm.type || globalOptionTrapeziumElements.type,
-				top = vm.y,
-				borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
-				upHalfWidth = vm.upperWidth / 2,
-				botHalfWidth = vm.bottomWidth / 2,
-				halfStroke = borderWidth / 2;
+					type = vm.type || globalOptionTrapeziumElements.type,
+					top = vm.y,
+					borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
+					upHalfWidth = vm.upperWidth / 2,
+					botHalfWidth = vm.bottomWidth / 2,
+					halfStroke = borderWidth / 2;
 
 			halfStroke = halfStroke < 0 ? 0 : halfStroke;
 
@@ -69,7 +70,7 @@ module.exports = function(Chart) {
 				];
 			} else if (type == 'scalene') {
 				var x1 = vm.x1,
-					x2 = vm.x2;
+						x2 = vm.x2;
 
 				corners = [
 					[x2 - botHalfWidth + halfStroke, vm.base],
@@ -98,8 +99,8 @@ module.exports = function(Chart) {
 			// Find first (starting) corner with fallback to 'bottom'
 			var borders = ['bottom', 'left', 'top', 'right'];
 			var startCorner = borders.indexOf(
-				vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
-				0);
+					vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
+					0);
 			if (startCorner === -1)
 				startCorner = 0;
 
@@ -135,7 +136,7 @@ module.exports = function(Chart) {
 		},
 		inLabelRange: function (mouseX) {
 			var x,
-				vm = this._view;
+					vm = this._view;
 
 			if (!vm) {
 				return false;
@@ -156,7 +157,7 @@ module.exports = function(Chart) {
 			var vm = this._view;
 			return {
 				x: vm.x || vm.x2,
-				y: vm.base - (vm.base - vm.y)/2
+				y: vm.base - (vm.base - vm.y) / 2
 			};
 		},
 		getArea: function () {
@@ -185,7 +186,7 @@ module.exports = function(Chart) {
 				y += (point1[1] + point2[1]) * f;
 			}
 			f = this.getArea() * 6;
-			return {x:x / f, y:y / f};
+			return {x: x / f, y: y / f};
 		},
 	});
 };
