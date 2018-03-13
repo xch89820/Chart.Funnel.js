@@ -1,13 +1,13 @@
 /*!
  * Chart.Funnel.js
  * A funnel plugin for Chart.js(http://chartjs.org/)
- * Version: 1.0.2
+ * Version: 1.1.2
  *
- * Copyright 2016 Jone Casaper
+ * Copyright 2016 Jone Casaper & YetiForce
  * Released under the MIT license
  * https://github.com/xch89820/Chart.Funnel.js/blob/master/LICENSE.md
  */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.Chart || (g.Chart = {})).Funnel = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.Chart || (g.Chart = {})).Funnel = f()}})(function(){var define,module,exports;return (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
 /**
@@ -57,16 +57,16 @@ module.exports = Chart;
 
 "use strict";
 
-module.exports = function(Chart) {
+module.exports = function (Chart) {
 	var helpers = Chart.helpers;
 
 	Chart.defaults.funnel = {
 		hover: {
 			mode: "label"
 		},
-		sort: 'asc',// sort options: 'asc', 'desc'
-		gap: 2,
-		bottomWidth: null,// the bottom width of funnel
+		sort: 'asc', // sort options: 'asc', 'desc'
+		gap: 0,
+		bottomWidth: null, // the bottom width of funnel
 		topWidth: 0, // the top width of funnel
 		keep: 'auto', // Keep left or right
 		elements: {
@@ -150,43 +150,99 @@ module.exports = function(Chart) {
 
 				chart.update();
 			}
-		}
+		},
+		scales: {
+			yAxes: [{
+					position: 'left',
+					type: 'category',
+					display: false,
+					// Specific to Horizontal Bar Controller
+					categoryPercentage: 0.8,
+					barPercentage: 0.9,
+
+					// offset settings
+					offset: true,
+
+					// grid line settings
+					gridLines: {
+						offsetGridLines: true
+					}
+				}]
+		},
 	};
 
 	Chart.controllers.funnel = Chart.DatasetController.extend({
 
 		dataElementType: Chart.elements.Trapezium,
 
-		linkScales: helpers.noop,
+		initialize: function (chart, datasetIndex) {
+			Chart.controllers.bar.prototype.initialize.call(this, chart, datasetIndex);
+			// sort arrays
+			if (typeof chart.options !== 'undefined' && typeof chart.options.sort !== 'undefined' && chart.options.sort.substr(0, 4) !== 'data') {
+				var dataset = chart.data.datasets[datasetIndex];
+				var dataPositions = [];
+				var originalData = dataset.data.slice();
+				helpers.each(dataset.data, function (item, index) {
+					dataPositions.push({index, value: item});
+				});
+				dataPositions.sort(function (a, b) {
+					return chart.options.sort === 'asc' ? a.value - b.value : b.value - a.value;
+				});
+				// sort labels in the same manner as data sort order
+				var labels = chart.data.labels.map((value, index) => {
+					return chart.data.labels[ dataPositions[index].index ];
+				});
+				chart.data.labels = labels;
+				// sort other arrays inside datasets
+				var keys = Object.keys(dataset);
+				for (var i = 0, len = keys.length; i < len; i++) {
+					var key = keys[i];
+					var arr = dataset[key];
+					if (dataset.hasOwnProperty(key) && Array.isArray(arr)) {
+						var sortedArr = arr.map((item, index) => {
+							return arr[dataPositions[index].index];
+						});
+						dataset[key] = sortedArr;
+					}
+				}
+			}
+		},
+
+		linkScales: function () {
+			var me = this;
+			var meta = me.getMeta();
+			var dataset = me.getDataset();
+			if (meta.yAxisID === null || !(meta.yAxisID in me.chart.scales)) {
+				meta.yAxisID = dataset.yAxisID || me.chart.options.scales.yAxes[0].id;
+			}
+		},
 
 		update: function update(reset) {
 			var me = this;
 			var chart = me.chart,
-				chartArea = chart.chartArea,
-				opts = chart.options,
-				meta = me.getMeta(),
-				elements = meta.data,
-				borderWidth = opts.elements.borderWidth || 0,
-				availableWidth = chartArea.right - chartArea.left - borderWidth * 2,
-				availableHeight = chartArea.bottom - chartArea.top - borderWidth * 2;
+					chartArea = chart.chartArea,
+					opts = chart.options,
+					meta = me.getMeta(),
+					elements = meta.data,
+					borderWidth = opts.elements.borderWidth || 0,
+					availableWidth = chartArea.right - chartArea.left - borderWidth * 2,
+					availableHeight = chartArea.bottom - chartArea.top - borderWidth * 2;
 
 			// top and bottom width
 			var bottomWidth = availableWidth,
-				topWidth = (opts.topWidth < availableWidth ? opts.topWidth : availableWidth) || 0;
+					topWidth = (opts.topWidth < availableWidth ? opts.topWidth : availableWidth) || 0;
 			if (opts.bottomWidth) {
 				bottomWidth = opts.bottomWidth < availableWidth ? opts.bottomWidth : availableWidth;
 			}
 
 			// percentage calculation and sort data
-			var sort = opts.sort,
-				dataset = me.getDataset(),
-				valAndLabels = [],
-				visiableNum = 0,
-				dMax = 0;
+			var dataset = me.getDataset(),
+					valAndLabels = [],
+					visiableNum = 0,
+					dMax = 0;
 			helpers.each(dataset.data, function (val, index) {
 				var backgroundColor = helpers.getValueAtIndexOrDefault(dataset.backgroundColor, index),
-					hidden = elements[index].hidden;
-				//if (!elements[index].hidden) {
+						hidden = elements[index].hidden;
 				valAndLabels.push({
 					hidden: hidden,
 					orgIndex: index,
@@ -195,39 +251,26 @@ module.exports = function(Chart) {
 					borderColor: helpers.getValueAtIndexOrDefault(dataset.borderColor, index, backgroundColor),
 					label: helpers.getValueAtIndexOrDefault(dataset.label, index, chart.data.labels[index])
 				});
-				//}
 				if (!elements[index].hidden) {
 					visiableNum++;
 					dMax = val > dMax ? val : dMax;
 				}
 			});
-			var dwRatio = bottomWidth / dMax,
-				sortedDataAndLabels = valAndLabels.sort(
-					sort === 'asc' ?
-						function (a, b) {
-							return a.val - b.val;
-						} :
-						function (a, b) {
-							return b.val - a.val;
-						}
-				);
+			var dwRatio = bottomWidth / dMax;
 			// For render hidden view
-			// TODO: optimization....
 			var _viewIndex = 0;
-			helpers.each(sortedDataAndLabels, function (dal, index) {
+			helpers.each(valAndLabels, function (dal, index) {
 				dal._viewIndex = !dal.hidden ? _viewIndex++ : -1;
 			});
-
 			// Elements height calculation
 			var gap = opts.gap || 0,
-				elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
+					elHeight = (availableHeight - ((visiableNum - 1) * gap)) / visiableNum;
 
 			// save
 			me.topWidth = topWidth;
 			me.dwRatio = dwRatio;
 			me.elHeight = elHeight;
-			me.sortedDataAndLabels = sortedDataAndLabels;
-
+			me.valAndLabels = valAndLabels;
 			helpers.each(elements, function (trapezium, index) {
 				me.updateElement(trapezium, index, reset);
 			}, me);
@@ -236,52 +279,57 @@ module.exports = function(Chart) {
 		// update elements
 		updateElement: function updateElement(trapezium, index, reset) {
 			var me = this,
-				chart = me.chart,
-				chartArea = chart.chartArea,
-				opts = chart.options,
-				sort = opts.sort,
-				dwRatio = me.dwRatio,
-				elHeight = me.elHeight,
-				gap = opts.gap || 0,
-				borderWidth = opts.elements.borderWidth || 0;
+					chart = me.chart,
+					chartArea = chart.chartArea,
+					opts = chart.options,
+					sort = opts.sort,
+					dwRatio = me.dwRatio,
+					elHeight = me.elHeight,
+					gap = opts.gap || 0,
+					borderWidth = opts.elements.borderWidth || 0;
 
 			// calculate x,y,base, width,etc.
 			var x, y, x1, x2,
-				elementType = 'isosceles',
-				elementData = me.sortedDataAndLabels[index], upperWidth, bottomWidth,
-				viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
-				base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
+					elementType = 'isosceles',
+					elementData = me.valAndLabels[index], upperWidth, bottomWidth,
+					viewIndex = elementData._viewIndex < 0 ? index : elementData._viewIndex,
+					base = chartArea.top + (viewIndex + 1) * (elHeight + gap) - gap;
 
-			if (sort === 'asc') {
+			var meta = me.getMeta();
+			trapezium._yScale = me.getScaleForId(meta.yAxisID);
+
+			if (sort === 'asc' || sort === 'data-asc' || !sort) {
 				// Find previous element which is visible
-				var previousElement = helpers.findPreviousWhere(me.sortedDataAndLabels,
-					function (el) {
-						return !el.hidden;
-					},
-					index
-				);
+				var previousElement = helpers.findPreviousWhere(me.valAndLabels,
+						function (el) {
+							return !el.hidden;
+						},
+						index
+						);
 				upperWidth = previousElement ? previousElement.val * dwRatio : me.topWidth;
 				bottomWidth = elementData.val * dwRatio;
-			} else {
-				var nextElement = helpers.findNextWhere(me.sortedDataAndLabels,
-					function (el) {
-						return !el.hidden;
-					},
-					index
-				);
+			} else if (sort === 'desc' || sort === 'data-desc') {
+				var nextElement = helpers.findNextWhere(me.valAndLabels,
+						function (el) {
+							return !el.hidden;
+						},
+						index
+						);
 				upperWidth = elementData.val * dwRatio;
 				bottomWidth = nextElement ? nextElement.val * dwRatio : me.topWidth;
 			}
 
-			y = chartArea.top + viewIndex * (elHeight + gap);
+			y = chartArea.top + elementData.orgIndex * (elHeight + gap);
 			if (opts.keep === 'left') {
 				elementType = 'scalene';
 				x1 = chartArea.left + upperWidth / 2;
 				x2 = chartArea.left + bottomWidth / 2;
+				x = x1;
 			} else if (opts.keep === 'right') {
 				elementType = 'scalene';
-				x1 = chartArea.right - upperWidth/ 2;
+				x1 = chartArea.right - upperWidth / 2;
 				x2 = chartArea.right - bottomWidth / 2;
+				x = x1;
 			} else {
 				x = (chartArea.left + chartArea.right) / 2;
 			}
@@ -307,7 +355,6 @@ module.exports = function(Chart) {
 					label: elementData && elementData.label
 				}
 			});
-
 			trapezium.pivot();
 		},
 		removeHoverStyle: function (trapezium) {
@@ -315,6 +362,7 @@ module.exports = function(Chart) {
 		}
 	});
 };
+
 },{}],4:[function(require,module,exports){
 /**
  *
@@ -326,9 +374,9 @@ module.exports = function(Chart) {
 
 "use strict";
 
-module.exports = function(Chart) {
+module.exports = function (Chart) {
 	var helpers = Chart.helpers,
-		globalOpts = Chart.defaults.global;
+			globalOpts = Chart.defaults.global;
 
 	globalOpts.elements.trapezium = {
 		backgroundColor: globalOpts.defaultColor,
@@ -351,24 +399,25 @@ module.exports = function(Chart) {
 			var xj = vs[j][0], yj = vs[j][1];
 
 			var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-			if (intersect) inside = !inside;
+			if (intersect)
+				inside = !inside;
 		}
 
 		return inside;
 	};
 
-	Chart.elements.Trapezium = Chart.Element.extend({
+	Chart.elements.Trapezium = Chart.elements.Rectangle.extend({
 		getCorners: function () {
 			var vm = this._view;
 			var globalOptionTrapeziumElements = globalOpts.elements.trapezium;
 
 			var corners = [],
-				type = vm.type || globalOptionTrapeziumElements.type,
-				top = vm.y,
-				borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
-				upHalfWidth = vm.upperWidth / 2,
-				botHalfWidth = vm.bottomWidth / 2,
-				halfStroke = borderWidth / 2;
+					type = vm.type || globalOptionTrapeziumElements.type,
+					top = vm.y,
+					borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
+					upHalfWidth = vm.upperWidth / 2,
+					botHalfWidth = vm.bottomWidth / 2,
+					halfStroke = borderWidth / 2;
 
 			halfStroke = halfStroke < 0 ? 0 : halfStroke;
 
@@ -387,7 +436,7 @@ module.exports = function(Chart) {
 				];
 			} else if (type == 'scalene') {
 				var x1 = vm.x1,
-					x2 = vm.x2;
+						x2 = vm.x2;
 
 				corners = [
 					[x2 - botHalfWidth + halfStroke, vm.base],
@@ -416,8 +465,8 @@ module.exports = function(Chart) {
 			// Find first (starting) corner with fallback to 'bottom'
 			var borders = ['bottom', 'left', 'top', 'right'];
 			var startCorner = borders.indexOf(
-				vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
-				0);
+					vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
+					0);
 			if (startCorner === -1)
 				startCorner = 0;
 
@@ -453,7 +502,7 @@ module.exports = function(Chart) {
 		},
 		inLabelRange: function (mouseX) {
 			var x,
-				vm = this._view;
+					vm = this._view;
 
 			if (!vm) {
 				return false;
@@ -469,16 +518,44 @@ module.exports = function(Chart) {
 
 			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
 			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
-
 		},
 		tooltipPosition: function () {
 			var vm = this._view;
 			return {
 				x: vm.x || vm.x2,
-				y: vm.base - (vm.base - vm.y)/2
+				y: vm.base - (vm.base - vm.y) / 2
 			};
-		}
+		},
+		getArea: function () {
+			var vm = this._view;
+			var total = 0;
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			for (var i = 0, l = corners.length; i < l; i++) {
+				var addX = corners[i][0];
+				var addY = corners[i == corners.length - 1 ? 0 : i + 1][1];
+				var subX = corners[i == corners.length - 1 ? 0 : i + 1][0];
+				var subY = corners[i][1];
+				total += (addX * addY * 0.5);
+				total -= (subX * subY * 0.5);
+			}
+			return Math.abs(total);
+		},
+		getCenterPoint: function () {
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			var vm = this._view;
+			var x = 0, y = 0, i, j, f, point1, point2;
+			for (i = 0, j = corners.length - 1; i < corners.length; j = i, i++) {
+				point1 = corners[i];
+				point2 = corners[j];
+				f = point1[0] * point2[1] - point2[0] * point1[1];
+				x += (point1[0] + point2[0]) * f;
+				y += (point1[1] + point2[1]) * f;
+			}
+			f = this.getArea() * 6;
+			return {x: x / f, y: y / f};
+		},
 	});
 };
+
 },{}]},{},[2])(2)
 });

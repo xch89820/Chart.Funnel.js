@@ -8,9 +8,9 @@
 
 "use strict";
 
-module.exports = function(Chart) {
+module.exports = function (Chart) {
 	var helpers = Chart.helpers,
-		globalOpts = Chart.defaults.global;
+			globalOpts = Chart.defaults.global;
 
 	globalOpts.elements.trapezium = {
 		backgroundColor: globalOpts.defaultColor,
@@ -33,24 +33,25 @@ module.exports = function(Chart) {
 			var xj = vs[j][0], yj = vs[j][1];
 
 			var intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-			if (intersect) inside = !inside;
+			if (intersect)
+				inside = !inside;
 		}
 
 		return inside;
 	};
 
-	Chart.elements.Trapezium = Chart.Element.extend({
+	Chart.elements.Trapezium = Chart.elements.Rectangle.extend({
 		getCorners: function () {
 			var vm = this._view;
 			var globalOptionTrapeziumElements = globalOpts.elements.trapezium;
 
 			var corners = [],
-				type = vm.type || globalOptionTrapeziumElements.type,
-				top = vm.y,
-				borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
-				upHalfWidth = vm.upperWidth / 2,
-				botHalfWidth = vm.bottomWidth / 2,
-				halfStroke = borderWidth / 2;
+					type = vm.type || globalOptionTrapeziumElements.type,
+					top = vm.y,
+					borderWidth = vm.borderWidth || globalOptionTrapeziumElements.borderWidth,
+					upHalfWidth = vm.upperWidth / 2,
+					botHalfWidth = vm.bottomWidth / 2,
+					halfStroke = borderWidth / 2;
 
 			halfStroke = halfStroke < 0 ? 0 : halfStroke;
 
@@ -69,7 +70,7 @@ module.exports = function(Chart) {
 				];
 			} else if (type == 'scalene') {
 				var x1 = vm.x1,
-					x2 = vm.x2;
+						x2 = vm.x2;
 
 				corners = [
 					[x2 - botHalfWidth + halfStroke, vm.base],
@@ -98,8 +99,8 @@ module.exports = function(Chart) {
 			// Find first (starting) corner with fallback to 'bottom'
 			var borders = ['bottom', 'left', 'top', 'right'];
 			var startCorner = borders.indexOf(
-				vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
-				0);
+					vm.borderSkipped || globalOptionTrapeziumElements.borderSkipped,
+					0);
 			if (startCorner === -1)
 				startCorner = 0;
 
@@ -135,7 +136,7 @@ module.exports = function(Chart) {
 		},
 		inLabelRange: function (mouseX) {
 			var x,
-				vm = this._view;
+					vm = this._view;
 
 			if (!vm) {
 				return false;
@@ -151,14 +152,41 @@ module.exports = function(Chart) {
 
 			var maxWidth = Math.max(vm.upperWidth, vm.bottomWidth);
 			return mouseX >= vm.x - maxWidth / 2 && mouseX <= vm.x + maxWidth / 2;
-
 		},
 		tooltipPosition: function () {
 			var vm = this._view;
 			return {
 				x: vm.x || vm.x2,
-				y: vm.base - (vm.base - vm.y)/2
+				y: vm.base - (vm.base - vm.y) / 2
 			};
-		}
+		},
+		getArea: function () {
+			var vm = this._view;
+			var total = 0;
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			for (var i = 0, l = corners.length; i < l; i++) {
+				var addX = corners[i][0];
+				var addY = corners[i == corners.length - 1 ? 0 : i + 1][1];
+				var subX = corners[i == corners.length - 1 ? 0 : i + 1][0];
+				var subY = corners[i][1];
+				total += (addX * addY * 0.5);
+				total -= (subX * subY * 0.5);
+			}
+			return Math.abs(total);
+		},
+		getCenterPoint: function () {
+			var corners = this._cornersCache ? this._cornersCache : this.getCorners();
+			var vm = this._view;
+			var x = 0, y = 0, i, j, f, point1, point2;
+			for (i = 0, j = corners.length - 1; i < corners.length; j = i, i++) {
+				point1 = corners[i];
+				point2 = corners[j];
+				f = point1[0] * point2[1] - point2[0] * point1[1];
+				x += (point1[0] + point2[0]) * f;
+				y += (point1[1] + point2[1]) * f;
+			}
+			f = this.getArea() * 6;
+			return {x: x / f, y: y / f};
+		},
 	});
 };

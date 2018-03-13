@@ -1,13 +1,13 @@
 {
-  "name": "chartjs-funnel",
-  "version": "1.0.5",
+  "name": "chartjs-plugin-funnel",
+  "version": "1.1.2",
   "description": "The funnel plugin for Chart.js",
   "main": "dist/chart.funnel.js",
   "directories": {
     "example": "example"
   },
   "dependencies": {
-    "chart.js": ">2.1.0"
+    "chart.js": ">2.7.0"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
@@ -21,7 +21,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-streamify": "^1.0.2",
-    "gulp-uglify": "^1.5.3",
+    "gulp-uglifyes": "^0.1.3",
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
     "jshint": "^2.9.2",
@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xch89820/Chart.Funnel.js"
+    "url": "https://github.com/YetiForceCompany/chartjs-plugin-funnel"
   },
   "keywords": [
     "Chart.js",
@@ -48,10 +48,10 @@
     "funnel",
     "plugin"
   ],
-  "author": "Jone Casper",
+  "author": "Jone Casper & YetiForce",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xch89820/Chart.Funnel.js/issues"
+    "url": "https://github.com/YetiForceCompany/chartjs-plugin-funnel/issues"
   },
-  "homepage": "https://github.com/xch89820/Chart.Funnel.js"
+  "homepage": "https://github.com/YetiForceCompany/chartjs-plugin-funnel"
 }

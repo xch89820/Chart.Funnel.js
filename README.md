@@ -1,24 +1,40 @@
-[![NPM version][npm-version-image]][npm-url] 
-[![NPM downloads][npm-downloads-image]][npm-url] 
+[![NPM version][npm-version-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
 [![MIT License][license-image]][license-url]
 [![Build Status](https://travis-ci.org/xch89820/Chart.Funnel.js.svg?branch=master)](https://travis-ci.org/xch89820/Chart.Funnel.js)
 
-# Chart.Funnel.js
-The funnel plugin for Chart.js > 2.0
+# chartjs-plugin-funnel
+The funnel plugin for Chart.js > 2.7
 
 ## Installation
 
-To download a zip, go to the Chart.Funnel.js on Github
+To download a zip, go to the chartjs-plugin-funnel on Github
 
 To install via npm / bower:
 
 ```bash
-npm install chartjs-funnel --save
+npm install chartjs-plugin-funnel --save
 ```
+
+## Preview
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270921-0021a42c-25d1-11e8-8823-926758ad0061.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270922-003b924c-25d1-11e8-9795-11a6dc35c68a.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37270924-00574fd2-25d1-11e8-933d-1a07ee16862d.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37288346-514d2f0c-2607-11e8-8bcb-eacabd470d8f.jpg)
+
+
+![chartjs-plugin-funnel](https://user-images.githubusercontent.com/36499752/37288348-521abcb0-2607-11e8-87cb-b52fc5575f44.jpg)
+
 
 ## Usage
 
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16495890/e6c3aaee-3f21-11e6-868a-40c796613d3c.jpg)
 To configure the funnel plugin, you can simply set chart type to `funnel`.
 
 Simple example:
@@ -43,17 +59,14 @@ var config = {
 			"Red",
 			"Blue",
 			"Yellow"
-		]	
+		]
 	}
 }
 ```
 
 Funnel chart support upside-down drawing or against left or right side drawing.
 
-Please see `example` folder for more information
-
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711980/d7c7a65a-46a9-11e6-94f2-6a3fdc8c79a1.JPG)
-![alt tag](https://cloud.githubusercontent.com/assets/4920540/16711969/427ac258-46a9-11e6-8f93-86abf82ed89e.JPG)
+This plugin works with datalabels plugin.
 
 
 You can find documentation for Chart.js at [www.chartjs.org/docs](http://www.chartjs.org/docs).
@@ -88,7 +101,7 @@ The default option is
 ```js
 {
    callbacks: {
-    	title: function (tooltipItem, data) {
+		title: function (tooltipItem, data) {
 			return '';
 		},
 		label: function (tooltipItem, data) {
@@ -104,7 +117,7 @@ Chart.Funnel.js is available under the [MIT license](http://opensource.org/licen
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: http://opensource.org/licenses/MIT
 
-[npm-url]: https://www.npmjs.com/package/chartjs-funnel
-[npm-version-image]: http://img.shields.io/npm/v/chartjs-funnel.svg?style=flat
+[npm-url]: https://www.npmjs.com/package/chartjs-plugin-funnel
+[npm-version-image]: http://img.shields.io/npm/v/chartjs-plugin-funnel.svg?style=flat
 
-[npm-downloads-image]: http://img.shields.io/npm/dm/chartjs-funnel.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/chartjs-plugin-funnel.svg?style=flat
